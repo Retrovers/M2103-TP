@@ -19,13 +19,27 @@
 #include "CException.h"    // de l'exercice précédent
 #include "CstCodErr.h"
 #include "Duree.h"
+#include "IEditable.hpp"
 
 using namespace std;
-using namespace rel_ops;
+//using namespace rel_ops;
 using namespace nsUtil;    // CException
 
 namespace
 {
+    class DureeEditable : public IEditable, public Duree {
+    public:
+
+        DureeEditable(long long unsigned d = 0) : IEditable(), Duree(d){
+        };
+
+        void display(ostream & os) const {
+            os << "C'est display";
+        }
+
+        ~DureeEditable();
+    };
+
     void testDuree_01 (void)
     {
         DureeEditable d1 (3661);
@@ -164,7 +178,7 @@ int main (int argc, char * argv [])
     {
         cerr << "Nombre d'arguments invalide\n"
                 "Usage : TestCDuree\n";
-        return KErrArg;
+        return 0;
     }
     try
     {

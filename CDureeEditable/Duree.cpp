@@ -1,3 +1,4 @@
+
 /**
  *
  * \file    Duree.cpp
@@ -13,6 +14,7 @@
  **/
 #include <iostream>
 #include <iomanip>   // setw()
+#include <math.h>
 #include "Duree.h"
 
 using namespace nsUtil;
@@ -25,7 +27,7 @@ DUREE::Duree  (const ULLong_t duree /* = ULLong_t (0) */)
 {
     normaliser ();
     cout << "duree construite : ";
-    display ();
+    display (cout);
     cout << endl;
 
 } // Duree()
@@ -35,7 +37,7 @@ DUREE::Duree  (const Duree & duree)
 {
     normaliser ();
     cout << "duree construite par recopie : ";
-    display ();
+    display (cout);
     cout << endl;
 
 } // Duree()
@@ -43,7 +45,7 @@ DUREE::Duree  (const Duree & duree)
 DUREE::~Duree  (void)
 {
     cout << "duree détruite : ";
-    display ();
+    display (cout);
     cout << endl;
 
 } // Duree()
@@ -59,41 +61,42 @@ void DUREE::normaliser (void)
 
 ULLong_t DUREE::getDuree (void) const { return myDuree; }
 
-void DUREE::display (void) const
-{
-    cout << '['
+void DUREE::display (ostream & os) const {
+    os << '['
          << setw (10) << myDays    << ':'
          << setfill ('0')
-         << setw (2)  << myHours   << " heure(s) "
-         << setw (2)  << myMinutes << " minute(s) "
-         << setw (2)  << mySeconds << " seconde(s) "
+         << setw (2)  << myHours   << " heure(s)"
+         << setw (2)  << myMinutes << " minute(s)"
+         << setw (2)  << mySeconds << " seconde(s)"
          << setfill (' ')
          << ']';
 
 } // display()
-
-void DUREE::incr (const ULLong_t delta /* = ULLong_t (0) */)
+/*
+void DUREE::incr (const ULLong_t delta)
 {
     myDuree += delta;
     normaliser ();
 
 } // incr()
 
-void DUREE::decr (const ULLong_t delta /* = ULLong_t (0) */)
+void DUREE::decr (const ULLong_t delta)
 {
     myDuree -= (delta > myDuree) ? myDuree : delta;
 
 } // decr()
-
+*/
 DUREE DUREE::operator + (const Duree & d) const
 {
-    return myDuree + d.myDuree;
+    Duree l (myDuree + d.getDuree());
+    return l;
 
 } // operator +()
 
 DUREE DUREE::operator - (const Duree & d) const
 {
-    return myDuree - (myDuree < d.myDuree ? myDuree : d.myDuree);
+    Duree l (myDuree - (myDuree < d.myDuree ? myDuree : d.myDuree));
+    return l;
 
 } // operator -()
 
@@ -120,5 +123,36 @@ bool DUREE::operator == (const Duree & d) const
     return myDuree == d.myDuree;
 
 } // operator ==()
+
+void DUREE::setDuree (ULLong_t d){
+        myDuree = d;
+        normaliser();
+}
+
+DUREE & DUREE::operator += (const Duree &d) noexcept{
+    Duree l (myDuree += d.getDuree());
+    return l;
+}
+DUREE & DUREE::operator -= (const Duree &d) noexcept{
+   Duree l (myDuree -= d.getDuree());
+   return l;
+}
+DUREE DUREE::operator ++ (int i) noexcept {
+    Duree l (myDuree + i);
+    return l;
+}
+DUREE & DUREE::operator ++ (void) noexcept {
+    Duree l (myDuree -= (1 > myDuree) ? myDuree : 1);
+    return l;
+}
+DUREE DUREE::operator -- (int i) noexcept {
+    Duree l(myDuree - i);
+    normaliser ();
+    return l;
+}
+DUREE & DUREE::operator -- (void) noexcept {
+    Duree l (myDuree += (1 > myDuree) ? myDuree : 1);
+    return l;
+}
 
 #undef DUREE

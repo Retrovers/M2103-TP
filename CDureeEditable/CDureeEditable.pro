@@ -11,4 +11,5 @@ SOURCES += \
 HEADERS += \
     Duree.h \
     CException.h \
-    CstCodErr.h
+    CstCodErr.h \
+    IEditable.hpp
