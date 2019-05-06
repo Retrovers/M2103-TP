@@ -18,7 +18,7 @@ namespace nsUtil {
 
             } // operator <<()
 
-            ~IEditable();
+            virtual ~IEditable() {}
     };
 }
 #endif

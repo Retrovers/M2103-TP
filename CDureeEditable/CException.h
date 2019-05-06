@@ -32,14 +32,14 @@ namespace nsUtil
       public :
         CException (const std::string & libelle = std::string(),
                     const unsigned      codErr  = KNoExc)     noexcept;
-        virtual ~CException (void)                            noexcept;
+        virtual ~CException (void)                            noexcept {};
 
         const std::string & getLibelle (void) const           noexcept;
         unsigned            getCodErr  (void) const           noexcept;
 
         virtual const char* what       (void) const           noexcept;
 
-        void display (ostream & os) const;
+        virtual void display(ostream & os) const;
 
     }; // CException
 

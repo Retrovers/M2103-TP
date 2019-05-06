@@ -15,6 +15,9 @@
 #include <cassert>
 #include <sstream>
 #include <exception>
+#include <utility>
+#include <iomanip>
+
 
 #include "CException.h"    // de l'exercice précédent
 #include "CstCodErr.h"
@@ -22,22 +25,63 @@
 #include "IEditable.hpp"
 
 using namespace std;
-//using namespace rel_ops;
+using namespace rel_ops;
 using namespace nsUtil;    // CException
 
 namespace
 {
-    class DureeEditable : public IEditable, public Duree {
-    public:
+    class DureeEditable : public Duree, public IEditable {
 
-        DureeEditable(long long unsigned d = 0) : IEditable(), Duree(d){
-        };
-
-        void display(ostream & os) const {
-            os << "C'est display";
+    protected:
+        virtual void display (ostream & os) const {
+            os << '['
+                 << setw (6) << myDays    << ':'
+                 << setfill ('0')
+                 << setw (2)  << myHours   << ":"
+                 << setw (2)  << myMinutes << ":"
+                 << setw (2)  << mySeconds
+                 << setfill (' ')
+                 << ']' << std::flush;
         }
 
-        ~DureeEditable();
+    public:
+        explicit DureeEditable(unsigned long long d = 0) : Duree(d), IEditable() {}
+        DureeEditable(const Duree & duree) : Duree(duree){}
+        virtual ~DureeEditable(){}
+        DureeEditable & operator ++ (void) noexcept {
+            *this = Duree::operator++();
+            return *this;
+        } // préincrémentation de la classe Duree
+        DureeEditable operator ++ (int i)  noexcept {
+           return Duree::operator++(i);
+        } // postincrémentation de la classe Duree
+        DureeEditable & operator -- (void) noexcept {
+            *this = Duree::operator--();
+            return *this;
+        } // préincrémentation de la classe Duree
+        DureeEditable   operator -- (int i)  noexcept {
+           return Duree::operator--(i);
+
+        } // postincrémentation de la classe Duree
+
+        DureeEditable & operator += (const Duree & d) noexcept {
+            *this =Duree::operator+=(d);
+            return *this;
+        }
+        DureeEditable & operator -= (const Duree & d) noexcept {
+            *this = Duree::operator-=(d);
+            return *this;
+        }
+        DureeEditable & operator -= (const unsigned long long & Duree) noexcept {
+            *this = Duree::operator-=(Duree);
+            return *this;
+        }
+        DureeEditable & operator += (const unsigned long long & Duree) noexcept {
+            *this = Duree::operator+=(Duree);
+            return *this;
+        }
+
+
     };
 
     void testDuree_01 (void)

@@ -37,8 +37,6 @@ const string & CEXC::getLibelle (void) const noexcept
 
 unsigned CEXC::getCodErr (void) const noexcept { return myCodErr;  }
 
-CEXC::~CException (void) noexcept {}
-
 const char* CEXC::what (void) const noexcept  { return myLibelle.c_str(); }
 
 void CEXC::display (ostream & os) const
