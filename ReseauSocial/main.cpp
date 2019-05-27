@@ -74,11 +74,13 @@ public :
     User(string name, System* s){
         this->myName = name;
         this->mySystem = s;
+        this->myMessagesSent.reserve(1000);
+        this->myMessageReceive.reserve(1000);
     }
    void sendMessage (PrivateMessage* message)
    {
        this->myMessageReceive.push_back(message);
-       cout << endl << this->getName() << " a reçu un message de " << message->getSender()->getName() << endl;
+       cout << this->getName() << " a reçu un message de " << message->getSender()->getName() << endl;
    } // sendMessage()
    void addFriend (User * oneFriend) {
        this->myFriend.push_back(oneFriend);
@@ -94,10 +96,10 @@ public :
        cout << "système" << endl; return NULL;
    }
    void addMessage (PrivateMessage & message) {
-       cout << endl << message.getSender()->getName() << " a envoyer un message a " << this->getName() << endl;
-       message.displayContent ();
+       //cout << endl << message.getSender()->getName() << " a envoyer un message a " << this->getName() << endl;
+       //message.displayContent ();
        this->myMessagesSent.push_back(message);
-       cout << endl;
+       //cout << endl;
    }
    unsigned getNbSentMessages(){
     return this->myMessagesSent.size();
@@ -235,29 +237,33 @@ public:
             for (unsigned j (0); j < user.getNbFriends (); ++j)
                 cout << "   -" << (user.getFriend (j))->getName () << endl;
         }
+        cout << endl;
         for (User & user : myUsers)
         {
             for (unsigned j (0); j < user.getNbFriends (); ++j)
             {
-                string content (string ("salut") + ' ' + (user.getFriend (j))->getName ());
+                string content (string ("salut de ") + ' ' + (user.getFriend (j))->getName ());
                 PrivateMessage message (content, & user);
                 user.addMessage (message);
                 PrivateMessage tmp = user.getSentMessage (user.getNbSentMessages () - 1);
                 (user.getFriend (j))->sendMessage (&tmp);
             }
+            cout << endl;
         }
-
+         cout << endl;
         for (unsigned i (0); i < myUsers.size (); ++i)
         {
             User user = myUsers [i];
             cout << user.getName () << " a envoyé " << user.getNbSentMessages() << " messages : " << endl;
             for (unsigned j (0); j < user.getNbSentMessages (); ++j)
             {
+                cout << "   -";
                 (user.getSentMessage (j)).displayContent();
                 cout << endl;
             }
 
         }
+        cout << endl;
         for (unsigned i (0); i < myUsers.size (); ++i)
         {
             User user = myUsers [i];
