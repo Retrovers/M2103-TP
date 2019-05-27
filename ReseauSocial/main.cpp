@@ -68,22 +68,23 @@ private:
     vector<User*> myFriend;
     vector<PrivateMessage> myMessagesSent;
     vector<PrivateMessage*> myMessageReceive;
+    System* mySystem;
 
 public :
-    User(string name){
+    User(string name, System* s){
         this->myName = name;
+        this->mySystem = s;
     }
    void sendMessage (PrivateMessage* message)
    {
        this->myMessageReceive.push_back(message);
-       cout << endl;
+       cout << endl << this->getName() << " a reçu un message de " << message->getSender()->getName() << endl;
    } // sendMessage()
    void addFriend (User * oneFriend) {
        this->myFriend.push_back(oneFriend);
-       cout << "ajouté" << endl;
+       cout << this->getName() << " a ajouté " << oneFriend->getName() << " a sa liste d'amie" << endl;
    }
-   User * getFriend (unsigned i) const {
-       cout << i << endl;
+   User* getFriend (unsigned i) const {
        return myFriend[i];
    }
    string getName() const{
@@ -93,9 +94,9 @@ public :
        cout << "système" << endl; return NULL;
    }
    void addMessage (PrivateMessage & message) {
+       cout << endl << message.getSender()->getName() << " a envoyer un message a " << this->getName() << endl;
        message.displayContent ();
        this->myMessagesSent.push_back(message);
-       message.getSender()->sendMessage(&message);
        cout << endl;
    }
    unsigned getNbSentMessages(){
@@ -121,7 +122,7 @@ public :
 
 void testPrivateMessage (void)
 {
-    User user("test");
+    User user("test", NULL);
     PrivateMessage message ("salut", & user);
     message.displayContent ();
     cout << " posté le : ";
@@ -162,14 +163,14 @@ void testPublicMessage (void)
 
 void testUser (void)
     {
-       // System oneSystem;
-        User alfred    ("Alfred");
-        User alain     ("Alain");
-        User sophie    ("Sophie");
-        User emmanuel  ("Emmanuel");
-        User christian ("Christian");
-        User petru     ("Petru");
-        User marc      ("Marc");
+        System oneSystem();
+        User alfred    ("Alfred", NULL);
+        User alain     ("Alain", NULL);
+        User sophie    ("Sophie", NULL);
+        User emmanuel  ("Emmanuel", NULL);
+        User christian ("Christian", NULL);
+        User petru     ("Petru", NULL);
+        User marc      ("Marc", NULL);
         PrivateMessage message ("salut", & alfred);
         message.displayContent ();
         cout << endl;
@@ -217,21 +218,22 @@ public:
         addUser ("Petru");
         addUser ("Marc");
         /* verification des Users */
-        cout << myUsers.size () << endl;
+        cout <<  myUsers.size () << " ont etait enregistré :" << endl;
         for (const User & user : myUsers)
         {
-            cout << user.getName () << endl;
+            cout << "   -" << user.getName () << endl;
         }
-
+        cout << endl;
         for (unsigned i (0); i < myUsers.size (); ++i)
             for (unsigned j (0); j < myUsers.size () / 2; ++j)
                 myUsers [i].addFriend (&myUsers [(i + ((j * 2) + 1)) % myUsers.size ()]);
+        cout << endl;
         for (unsigned i (0); i < myUsers.size (); ++i)
         {
             User user = myUsers [i];
             cout << user.getName () << " a " << user.getNbFriends() << " amis : " << endl;
             for (unsigned j (0); j < user.getNbFriends (); ++j)
-                cout << (user.getFriend (j))->getName () << endl;
+                cout << "   -" << (user.getFriend (j))->getName () << endl;
         }
         for (User & user : myUsers)
         {
@@ -299,8 +301,9 @@ public:
         return this->myPublicMessages[i];
     }
     void addUser(string name){
-        User user(name);
+        User user(name, this);
         this->myUsers.push_back(user);
+        this->myNbUsers += 1;
     }
     void addPublicMessage(string message){
         PublicMessage m(message);
