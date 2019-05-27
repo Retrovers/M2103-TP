@@ -64,7 +64,6 @@ class User
 {
 private:
     string myName;
-    unsigned myNumber;
     vector<User*> myFriend;
     vector<PrivateMessage> myMessagesSent;
     vector<PrivateMessage*> myMessageReceive;
@@ -96,20 +95,17 @@ public :
        cout << "système" << endl; return NULL;
    }
    void addMessage (PrivateMessage & message) {
-       //cout << endl << message.getSender()->getName() << " a envoyer un message a " << this->getName() << endl;
-       //message.displayContent ();
        this->myMessagesSent.push_back(message);
-       //cout << endl;
    }
-   unsigned getNbSentMessages(){
+   unsigned long getNbSentMessages(){
     return this->myMessagesSent.size();
    }
 
-   unsigned getNbRecievedMessages(){
+   unsigned long getNbRecievedMessages(){
     return this->myMessageReceive.size();
    }
 
-   unsigned getNbFriends(){
+   unsigned long getNbFriends(){
         return this->myFriend.size();
    }
 
